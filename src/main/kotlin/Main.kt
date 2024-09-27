@@ -25,7 +25,7 @@ data class User(
     val military: List<Any>?,
     val interests: String?,
 
-)
+    )
 
 data class UserList(
     val users: List<User>
@@ -50,21 +50,30 @@ fun processDataCharacteristics(users: List<User>){
     val life_main = users.count { it.personal?.life_main != null }
 
 
-    listOf(
-        homeTown,
-        graduation,
-        noLangs,
-        singleLang,
-        manyLangs,
-        home_phone,
-        relation,
-        relatives,
-        career,
-        military,
-        interests,
-        life_main
-    ).forEachIndexed { ind, p ->
-        println("$ind: ${p.percentWithDigits(users.size, 2)}")
+    linkedMapOf(
+        "Родной город указан" to homeTown,
+        "Родной город не указан" to users.size - homeTown,
+        "Образование указано" to graduation,
+        "Образование не указано" to users.size - graduation,
+        "Владение языками не указано" to noLangs,
+        "Владение языками - один" to singleLang,
+        "Владение языками - несколько" to manyLangs,
+        "Контакты не указаны" to users.size - home_phone,
+        "Контакты указаны" to home_phone,
+        "Семейное положение указано" to relation,
+        "Семейное положение не указано" to users.size - relation,
+        "Члены семьи не указаны" to users.size - relatives,
+        "Члены семьи указаны" to relatives,
+        "Карьера не указана" to users.size - career,
+        "Карьера указана" to career,
+        "Военная служба не указана" to users.size - military,
+        "Военная служба указана" to military,
+        "Интересы не указаны" to users.size - interests,
+        "Интересы указаны" to interests,
+        "Жизненная позиция не указана" to users.size - life_main,
+        "Жизненная позиция указана" to life_main
+    ).entries.forEachIndexed { ind, (name, value) ->
+        println("$ind) $name: ${value.percentWithDigits(users.size, 2)}")
     }
 }
 
@@ -76,15 +85,15 @@ fun main() {
         val studyingAtUniversity = allUsers.filter { (it.universities?.size ?: 0) > 0 }
         val notStudyingAtUniversity = allUsers.filter { (it.universities?.size ?: 0 == 0) }
 
+        println("ВСЕ ПОЛЬЗОВАТЕЛИ")
         processDataCharacteristics(allUsers)
-        println()
+        println("\nПАРНИ")
         processDataCharacteristics(boys)
-        println()
+        println("\nДЕВУШКИ")
         processDataCharacteristics(girls)
-        println()
+        println("\nНЕ БЫДЛО")
         processDataCharacteristics(studyingAtUniversity)
-        println()
+        println("\nБЫДЛО")
         processDataCharacteristics(notStudyingAtUniversity)
-        println()
     }
 }
