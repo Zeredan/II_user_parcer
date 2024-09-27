@@ -10,6 +10,11 @@ data class Personal(
     val life_main: Int?
 )
 
+data class Counters(
+    val photos: Int?,
+    val videos: Int?
+)
+
 data class User(
     val id: Int?,
     val sex : Int?,
@@ -25,7 +30,8 @@ data class User(
     val military: List<Any>?,
     val interests: String?,
 
-    )
+    val counters: Counters?
+)
 
 data class UserList(
     val users: List<User>
@@ -77,6 +83,14 @@ fun processDataCharacteristics(users: List<User>){
     }
 }
 
+fun retrievePhotoVideoPares(users: List<User>) : List<Pair<Int, Int>>{
+    return users
+        .filter{(it.counters?.photos ?: 0) > 0 || (it.counters?.videos ?: 0) > 0}
+        .map{
+            (it.counters?.photos ?: 0) to (it.counters?.videos ?: 0)
+        }
+}
+
 fun main() {
     FileReader("src/main/resources/users.json").readLines()[0].let{"{users: $it}"}.run jsonInfo@{
         val allUsers = Gson().fromJson(this, UserList::class.java).users
@@ -95,5 +109,9 @@ fun main() {
         processDataCharacteristics(studyingAtUniversity)
         println("\nБЫДЛО")
         processDataCharacteristics(notStudyingAtUniversity)
+
+        val photoVideoCorrelationPares = retrievePhotoVideoPares(allUsers)
+        println("ФОТКИ: [${photoVideoCorrelationPares.joinToString(", "){ "${it.first}" }}]")
+        println("ВИДОСЫ: [${photoVideoCorrelationPares.joinToString(", "){ "${it.second}" }}]")
     }
 }
