@@ -85,9 +85,9 @@ fun processDataCharacteristics(users: List<User>){
 
 fun retrievePhotoVideoPares(users: List<User>) : List<Pair<Int, Int>>{
     return users
-        .filter{(it.counters?.photos ?: 0) > 0 || (it.counters?.videos ?: 0) > 0}
+        .filter{(it.counters?.photos ?: 0) > 0 && (it.counters?.videos ?: 0) > 0}
         .map{
-            (it.counters?.photos ?: 0) to (it.counters?.videos ?: 0)
+            it.counters!!.photos!! to it.counters.videos!!
         }
 }
 
