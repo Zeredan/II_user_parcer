@@ -48,7 +48,7 @@ fun processDataCharacteristics(users: List<User>){
     val singleLang = users.count { it.personal?.langs?.size == 1}
     val manyLangs = users.count { (it.personal?.langs?.size ?: 0) > 1}
     val home_phone = users.count { it.home_phone?.run{ isNotEmpty() } ?: false } // or (it.home_phone ?: "").isNotEmpty
-    val relation = users.count { it.relation != null }
+    val relation = users.count { it.relation?.let{it1 -> it1 > 0} ?: false }
     val relatives = users.count { (it.relatives?.size ?: 0) > 0 }
     val career = users.count { (it.career?.size ?: 0) > 0 }
     val military = users.count { (it.military?.size ?: 0) > 0 }
@@ -92,7 +92,7 @@ fun retrievePhotoVideoPares(users: List<User>) : List<Pair<Int, Int>>{
 }
 
 fun main() {
-    FileReader("src/main/resources/users.json").readLines()[0].let{"{users: $it}"}.run jsonInfo@{
+    FileReader("src/main/resources/youth.json").readLines()[0].let{"{users: $it}"}.run jsonInfo@{
         val allUsers = Gson().fromJson(this, UserList::class.java).users
         val girls = allUsers.filter { it.sex == 1 }
         val boys = allUsers.filter { it.sex == 2 }
